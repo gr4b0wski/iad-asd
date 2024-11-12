@@ -98,6 +98,22 @@ class Node:
         self.print_all_preorder(root.left)
         self.print_all_preorder(root.right)
 
+    def union(self, p1, p2):
+        if p1 is None:
+            return p2
+        if p2 is None:
+            return p1
+        if p1.val < p2.val:
+            p1, p2 = p2, p1
+        p1.right = self.union(p1.right, p2)
+        # kopiec skośny: p1.left, p1.right = p1.right, p1.left
+        # kopiec lewostronny:
+        # if p1.left.npl < p1.right.npl:
+        #   p1.left, p1.right = p1.right, p1.left
+        #   p1.npl = min(p1.left.npl, p1.right.npl) + 1
+        return p1
+    # zlozonosc zamortyzowana - zlozonosc pesymistyczna w ciagu n operacji na jedna operacje
+
 # tworze sb kopca skosnego i ustawiam na niego npl
 h = Node(10)
 h.right = Node(7)
@@ -111,7 +127,55 @@ h.setNPL(h)
 h.print_all_preorder(h)
 
 
+# drzewa dwumianowe, kolejki dwumianowe, kopce fibonacciego
 
+# drzewo dwumianowe - nwm dziwne jakies, prev i next to wskazniki na poprzednie
+# i nastepne rodzenstwo, child to wskaznik na najbardziej lewe dziecko
+class Node:
+    root = None
+    def __init__(self, val, child=None, h=None, prev=None, next=None, marked=False):
+        self.val = val
+        self.child = child
+        self.h = h
+        self.prev = prev
+        self.next = next
+        self.marked = marked
+        if self.root is None:
+            self.root = self
+
+    def print_all(self, root):
+        if root is None:
+            return
+        print(root.val)
+        p = root.child
+        while p is not None:
+            self.print_all(p)
+            p = p.next
+
+    def missing_index(self, root):
+        if root.marked == False:
+            return -1
+        hArray = [False] * h
+        p = root.child
+        while p is not None:
+            hArray[p.h] = True
+            p = p.next
+        for i in range(root.h):
+            if not hArray[i]:
+                return i
+
+    # t2 staje sie najbardziej prawym dzieckiem t1
+    def margeTrees(self, t1, t2):
+        if t1.val < t2.val:
+            t1, t2 = t2, t1
+        if t1.child is not None:
+            t1.child.prev.next = t2
+            t2.prev = t1.child.prev
+            t1.child.prev = t2
+        else:
+            t1.child = t2
+            t1.h = t1.h + 1
+        return t1
 
 
 
