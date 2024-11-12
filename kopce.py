@@ -131,6 +131,7 @@ h.print_all_preorder(h)
 
 # drzewo dwumianowe - nwm dziwne jakies, prev i next to wskazniki na poprzednie
 # i nastepne rodzenstwo, child to wskaznik na najbardziej lewe dziecko
+# warto dodac, ze prev pierwszego dziecka to ostatnie dziecko
 class Node:
     root = None
     def __init__(self, val, child=None, h=None, prev=None, next=None, marked=False):
