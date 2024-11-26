@@ -178,8 +178,63 @@ class Node:
             t1.h = t1.h + 1
         return t1
 
+# kolejka dwumianowa - kolekcja kopcow dwumianowych w kolejnosci posortowanej rosnaco
 
-
+class Node:
+    root = None
+    def __init__(self, val, child=None, h=None, prev=None, next=None, marked=False):
+        self.val = val
+        self.child = child
+        self.h = h
+        self.prev = prev
+        self.next = next
+        self.marked = marked
+        if self.root is None:
+            self.root = self
+    def addToEnd(self, p, t):
+        if p is not None:
+            plast = p.prev
+            plast.next = t
+            t.prev = plast
+            p.prev = t
+            return p
+        else:
+            return t
+    def extract(self, p):
+        if p is None:
+            return (None, None)
+        t = p
+        p = p.next
+        if p is None:
+            return (t, None)
+        t.next = None
+        p.prev = t.prev
+        t.prev = t
+        return (t, p)
+    def correctAndAddToEnd(self, p, t):
+        # marked pokazuje ilu drzew brakuje, w tym zadaniu przyjmuje wartosc 0, 1 lub 2
+        if t.marked == 0:
+            return self.addToEnd(p, t)
+        if t.marked == 1:
+            if t.child.prev.h == t.h - 2:
+                t.h = t.h - 1
+                t.marked = 0
+            return self.addToEnd(p, t)
+        if t.marked == 2:
+            if t.child.prev.h == t.h - 3:
+                t.h = t.h - 2
+                t.marked = 0
+                return self.addToEnd(p, t)
+            if t.child.prev.h == t.h - 2:
+                t.h = t.h - 1
+                t.marked = 0
+                return self.addToEnd(p, t)
+            ptr = t.child
+            while ptr is not None:
+                (t1, ptr) = self.extract(ptr)
+                p = self.addToEnd(p, t1)
+            t.h, t.marked, t.child = 0, 0, None
+            return self.addToEnd(p, t)
 
 
 
