@@ -60,7 +60,7 @@ def search(v, beap):
             j = j - 1
             k = ij2k(i, j)
             continue
-        if ij2k(i, j) <= beap[-1]:
+        if len(beap) >= ij2k(i + 1, j):
             i = i + 1
             k = ij2k(i, j)
             continue
@@ -69,6 +69,8 @@ def search(v, beap):
     if j == 0:
         return -1
     return k
+
+print(search(1, beap))
 
 # kopiec skośny - dowolne drzewo binarne z własnościami kopca
 class Node:
@@ -124,7 +126,7 @@ h.right.right = Node(5)
 h.right.left = Node(6)
 h.left.right.left = Node(1)
 h.setNPL(h)
-h.print_all_preorder(h)
+# h.print_all_preorder(h)
 
 
 # drzewa dwumianowe, kolejki dwumianowe, kopce fibonacciego
