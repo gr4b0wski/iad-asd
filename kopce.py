@@ -70,7 +70,7 @@ def search(v, beap):
         return -1
     return k
 
-print(search(1, beap))
+# print(search(1, beap))
 
 # kopiec skośny - dowolne drzewo binarne z własnościami kopca
 class Node:
@@ -115,6 +115,15 @@ class Node:
         #   p1.npl = min(p1.left.npl, p1.right.npl) + 1
         return p1
     # zlozonosc zamortyzowana - zlozonosc pesymistyczna w ciagu n operacji na jedna operacje
+
+p1 = Node(3)
+p1.left = Node(4)
+p1.right = Node(7)
+p2 = Node(2)
+p2.left = Node(1)
+p2.right = Node(10)
+w = Node(0)
+print(w.print_all_preorder(w.union(p1, p2)))
 
 # tworze sb kopca skosnego i ustawiam na niego npl
 h = Node(10)
@@ -167,18 +176,6 @@ class Node:
             if not hArray[i]:
                 return i
 
-    # t2 staje sie najbardziej prawym dzieckiem t1
-    def margeTrees(self, t1, t2):
-        if t1.val < t2.val:
-            t1, t2 = t2, t1
-        if t1.child is not None:
-            t1.child.prev.next = t2
-            t2.prev = t1.child.prev
-            t1.child.prev = t2
-        else:
-            t1.child = t2
-            t1.h = t1.h + 1
-        return t1
 
 # kolejka dwumianowa - kolekcja kopcow dwumianowych w kolejnosci posortowanej rosnaco
 
@@ -238,6 +235,33 @@ class Node:
             t.h, t.marked, t.child = 0, 0, None
             return self.addToEnd(p, t)
 
+    # t2 staje sie najbardziej prawym dzieckiem t1
+    def mergeTrees(self, t1, t2):
+        if t1.val < t2.val:
+            t1, t2 = t2, t1
+        if t1.child is not None:
+            t1.child.prev.next = t2
+            t2.prev = t1.child.prev
+            t1.child.prev = t2
+        else:
+            t1.child = t2
+            t1.h = t1.h + 1
+        return t1
+
+    def consolidate(self, head):
+        pArr = []
+        max_h = 0
+        while head is not None:
+            p = self.extract(head)
+            max_h = max(max_h, p.h)
+            while pArr[p.h] is not None:
+                p = self.mergeTrees(p, pArr[p.h])
+                pArr[p.h - 1] = None
+            pArr[p.h] = p
+
+        for i in range(max_h + 1):
+            if pArr[i] is not None:
+                self.addToEnd(head, pArr[i])
 
 
 
